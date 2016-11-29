@@ -21,11 +21,12 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import argparse
 import os
 import signal
 import socket
-import sys
 import struct
+import sys
 
 WOLH_PASSWD_NONE     = 102
 WOL_PACKET_MIN_BYTES = 130
@@ -105,11 +106,24 @@ def __handle_sigs_for(socket):
     signal.signal(signal.SIGTERM, on_exit)
     signal.signal(signal.SIGINT, on_exit)
 
+def __getopt():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-c', dest='cmd', help="Shell CMD to execute")
+    parser.add_argument('-m', dest='macaddr',
+            help="Identifies wol packets with a specific destination MACADDR")
+    parser.add_argument('-i', dest='ipsrc',
+            help="Filters wol packets with a specific IPSRC address (optional)")
+    return parser.parse_args()
+
 def main():
-    port = None
+    args = __getopt()
+
+    if args == None or args.cmd == None or args.macaddr == None:
+        sys.exit()
+
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
-        sock.bind((DEFAULT_HOST, DEFAULT_PORT if port == None else port))
+        sock.bind((DEFAULT_HOST, DEFAULT_PORT))
     except socket.error as msg:
         print ('Cannot create socket. Error: ' + str(msg[0]) + ') Message:' + str(msg[1]))
         sys.exit()
@@ -120,9 +134,9 @@ def main():
     while True:
         packet = sock.recv(WOL_PACKET_MAX_BYTES)
 
-        if __wol_pktcheck(packet) and not wol_found:
+        if __wol_pktcheck(packet, args.macaddr, args.ipsrc) and not wol_found:
             print("Kore: <WakeUp>")
-            os.system("systemctl start kodi")
+            os.system(args.cmd)
             wol_found = True
         else:
             wol_found = False
