@@ -71,7 +71,7 @@ def __wol_datacheck(macaddr, data):
         j = (j + 1) % 6
     return True
 
-def __wol_pktcheck(packet, macaddr = None, ipsrc = None):
+def __wol_pktcheck(packet, macaddr, ipsrc = None):
     size = __get_size(packet)
     if size < WOL_PACKET_MIN_BYTES:
         return False
