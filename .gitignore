@@ -1,11 +1,13 @@
 /*
 
+!doc/
 doc/*
 !doc/kore-btn.jpg
 !doc/kore-cfg.jpg
 
-wakeupkd/*
-!wakeupkd/wakeupkd.py
+!kakeup/
+kakeup/*
+!kakeup/kakeup.py
 
 !.gitignore
 !LICENSE

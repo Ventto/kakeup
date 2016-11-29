@@ -1,11 +1,11 @@
-Wakeupkd
-==========
+Kakeup
+=======
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/Ventto/wakeupkd/blob/master/LICENSE)
-[![Status](https://img.shields.io/badge/status-experimental-orange.svg?style=flat)](https://github.com/Ventto/wakeupkd/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/Ventto/kakeup/blob/master/LICENSE)
+[![Status](https://img.shields.io/badge/status-experimental-orange.svg?style=flat)](https://github.com/Ventto/Kakeup/)
 [![Language (Python)](https://img.shields.io/badge/powered_by-Python-yellow.svg)](https://www.python.org/)
 
-*Wakeupkd is a Python tool to leverage Kore's "Wake Up" button to start Kodi.*
+*Kakeup is a Python tool to leverage Kore's "Wake Up" button to start Kodi.*
 
 Introduction
 ------------
@@ -46,7 +46,7 @@ Usage
 -----
 
 ```
-usage: wakeupkd.py [-h] [-c CMD] [-m MACADDR] [-i IPSRC]
+usage: kakeup.py [-h] [-c CMD] [-m MACADDR] [-i IPSRC]
 
 Miscellaneous:
   -h, --help  Show this help message and exit
@@ -65,7 +65,7 @@ Examples
 * Run it with *sudo*:
 
 ```
-$ python wakeupkd.py -c "systemctl start kodi" -m "B8:B2:B2:B2:42:42"
-$ python wakeupkd.py -c "exec kodi" -m "B8:B2:B2:B2:42:42"
-$ python wakeupkd.py -c "/usr/bin/bash -c <path>/kodi.sh" -m "B8:B2:B2:B2:42:42"
+$ python kakeup.py -c "systemctl start kodi" -m "B8:B2:B2:B2:42:42"
+$ python kakeup.py -c "exec kodi" -m "B8:B2:B2:B2:42:42"
+$ python kakeup.py -c "/usr/bin/bash -c <path>/kodi.sh" -m "B8:B2:B2:B2:42:42"
 ```
