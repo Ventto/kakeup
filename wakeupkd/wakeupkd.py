@@ -102,7 +102,7 @@ def main():
     while True:
         packet = sock.recv(WOL_PACKET_MAX_BYTES)
         if __wol_pktcheck(packet):
-            print("WOL !")
+            print("Kore: <WakeUp>")
             os.system("systemctl start kodi")
 
 if __name__ == "__main__":
