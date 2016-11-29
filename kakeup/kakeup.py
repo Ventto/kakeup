@@ -34,6 +34,7 @@ WOL_PACKET_MAX_BYTES = 176
 DEFAULT_PORT         = 9
 DEFAULT_HOST         = "0.0.0.0"
 
+# Get the size of a given object
 def __get_size(obj, seen=None):
     size = sys.getsizeof(obj)
     if seen is None:
@@ -51,6 +52,8 @@ def __get_size(obj, seen=None):
         size += sum((get_size(i, seen) for i in obj))
     return size
 
+
+# Compare Inet address with an IPV4 address bytes object
 def __ip_ipsrccheck(ipsrc, data):
     ipsrc_s = ipsrc.split('.')
     ipsrc_b = [int(i) for i in ipsrc_s]
@@ -60,6 +63,7 @@ def __ip_ipsrccheck(ipsrc, data):
             return False
     return True
 
+# Check on MAC address validity in WOL packet data
 def __wol_datacheck(macaddr, data):
     mac_bytes = bytearray.fromhex(macaddr.replace(':', ''))
     for i in range(6):
@@ -72,6 +76,7 @@ def __wol_datacheck(macaddr, data):
         j = (j + 1) % 6
     return True
 
+# Check on WOL packet validity
 def __wol_pktcheck(packet, macaddr, ipsrc = None):
     size = __get_size(packet)
     if size < WOL_PACKET_MIN_BYTES:
