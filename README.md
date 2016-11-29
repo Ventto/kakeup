@@ -5,21 +5,24 @@ Kakeup
 [![Status](https://img.shields.io/badge/status-experimental-orange.svg?style=flat)](https://github.com/Ventto/Kakeup/)
 [![Language (Python)](https://img.shields.io/badge/powered_by-Python-yellow.svg)](https://www.python.org/)
 
-*Kakeup is a Python tool to force starting Kodi with the Kore's "Wake Up" button.*
+*Kakeup is a Python script to leverage the Kore remote 'Wake Up' button to start Kodi on
+running platform.*
 
 Introduction
 ------------
 
-The purpose is to start a Kodi server without any intrusive and fastidious way as
-opening a ssh-session.
+The purpose is starting the Kodi server on a running platform such as
+Raspberry-Pi without any intrusive and fastidious way as opening a ssh-session.
 
 The Kore remote is the official Kodi remote and a wonderful application which
-implements that feature.<br />But sometimes it works and sometimes not
-(reported issue: [KodiForum](http://forum.kodi.tv/showthread.php?tid=222872&pid=2466409#pid2466409)).
+implements a "Wake-On-Lan" button (cf. below) that allows a computer to be turned on or
+awakened by a network message.
 
-So Kakeup is a temporary workaround.
+Kakeup is a tiny workaround for those which are not interested in that feature
+and sometimes want to quit and start the Kodi process on a permanent running Rpi.
 
 ![Screenshot of Kore](doc/kore-btn.jpg)
+
 
 Requirements
 ------------

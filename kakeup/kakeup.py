@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 import argparse
+import ipaddress
 import os
 import signal
 import socket
@@ -52,17 +53,6 @@ def __get_size(obj, seen=None):
         size += sum((get_size(i, seen) for i in obj))
     return size
 
-
-# Compare Inet address with an IPV4 address bytes object
-def __ip_ipsrccheck(ipsrc, data):
-    ipsrc_s = ipsrc.split('.')
-    ipsrc_b = [int(i) for i in ipsrc_s]
-    for i in range(4):
-        print (data[i], ';', ipsrc_b[i])
-        if data[i] != ipsrc_b[i]:
-            return False
-    return True
-
 # Check on MAC address validity in WOL packet data
 def __wol_datacheck(macaddr, data):
     mac_bytes = bytearray.fromhex(macaddr.replace(':', ''))
@@ -82,12 +72,12 @@ def __wol_pktcheck(packet, macaddr, ipsrc = None):
     if size < WOL_PACKET_MIN_BYTES:
         return False
 
-    iph         = struct.unpack('!BBHHHBBH4s4s' , packet[0:20])
+    iph         = struct.unpack('!BBHHHBBHL4s' , packet[0:20])
     iph_version = iph[0] >> 4
     iph_len     = (iph[0] & 0xF) * 4
     iph_ipsrc   = iph[8]
 
-    if ipsrc != None and not __ip_ipsrccheck(ipsrc, iph_ipsrc):
+    if ipsrc != None and int(ipaddress.IPv4Address(ipsrc)) != iph_ipsrc:
         return False
 
     udph        = struct.unpack('!4H' , packet[iph_len: iph_len + 8])
