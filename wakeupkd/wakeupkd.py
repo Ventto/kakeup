@@ -28,7 +28,6 @@ import sys
 import struct
 
 WOLH_PASSWD_NONE     = 102
-WOLH_PASSWD_EXIST    = 106
 WOL_PACKET_MIN_BYTES = 130
 WOL_PACKET_MAX_BYTES = 176
 DEFAULT_PORT         = 9
@@ -63,16 +62,7 @@ def __wol_datacheck(macaddr, data):
         j = (j + 1) % 6
     return True
 
-def __wol_pwdcheck(passwd, data):
-    if passwd.nbytes() != 4:
-        return False
-    pwd_bytes = bytearray(passwd)
-    for i in range(4):
-        if pwd_bytes[i] != data[i]:
-            return False
-    return False
-
-def __wol_pktcheck(packet, macaddr = None, ipsrc = None, passwd = None):
+def __wol_pktcheck(packet, macaddr = None, ipsrc = None):
     size = __get_size(packet)
     if size < WOL_PACKET_MIN_BYTES:
         return False
@@ -93,13 +83,10 @@ def __wol_pktcheck(packet, macaddr = None, ipsrc = None, passwd = None):
     wolh_off    = iph_len + 8
     wolh_len    = udph_len - 8
 
-    if wolh_len == WOLH_PASSWD_NONE or wolh_len == WOLH_PASSWD_EXIST:
+    if wolh_len == WOLH_PASSWD_NONE:
         wolh = struct.unpack('!102B', packet[wolh_off:wolh_off + wolh_len])
         if macaddr != None and not __wol_datacheck(macaddr, wolh):
             return False
-        if passwd != None and wolh_len == WOL_PASSWD_EXIST:
-            pwd_off = wolh_off + wolh_len
-            return __wol_pwdcheck(passwd, packet[pwd_off: pwd_off + 4])
         return True
     return False
 
