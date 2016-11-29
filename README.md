@@ -5,7 +5,7 @@ Wakeupkd
 [![Status](https://img.shields.io/badge/status-experimental-orange.svg?style=flat)](https://github.com/Ventto/wakeupkd/)
 [![Language (Python)](https://img.shields.io/badge/powered_by-Python-yellow.svg)](https://www.python.org/)
 
-*Wakeupkd is a Python program to leverage Kore's "Wake Up" button to start Kodi.*
+*Wakeupkd is a Python tool to leverage Kore's "Wake Up" button to start Kodi.*
 
 Introduction
 ------------
@@ -26,6 +26,7 @@ Requirements
 ------------
 
 * *python3.5*
+* *python-argparse*
 
 Installation
 ------------
@@ -36,33 +37,35 @@ you need to:
 * Run the script as a privileged user (sudo only)
 * Or use a loginless and passwordless user and give it the permissions it needs
 
-Most modern systems ignore suid/sgid bits on scripts with any interpreter.<br />
-So any SUID/CAP set on the script will be ignored.
+*Most modern systems ignore suid/sgid bits on scripts with any interpreter.<br />
+So any SUID/CAP set on the script will be ignored.*
 
 ![Screenshot of Kore](doc/kore-cfg.jpg)
 
 Usage
 -----
 
-### Archlinux
+```
+usage: wakeupkd.py [-h] [-c CMD] [-m MACADDR] [-i IPSRC]
 
-* It could be nice to run *wakeupkd.py* automatically after boot with root
-  privileges.
+Miscellaneous:
+  -h, --help  Show this help message and exit
 
-* Or run it manually:
+Necessary:
+  -c CMD      Shell CMD to execute
+  -m MACADDR  Filters wol packets with a specific destination MACADDR
+
+Optional:
+  -i IPSRC    Filters wol packets with a specific IPSRC address
+```
+
+Examples
+-------
+
+* Run it with *sudo*:
 
 ```
-$ sudo python wakeupkd.py
-```
-
-### For Others
-
-* Edit `wakeupkd.py` and add your own shell command to start Kodi:
-
-```python
-while True:
-    packet = sock.recv(WOL_PACKET_MAX_BYTES)
-    if __wol_pktcheck(packet):
-       print("Kore: <WakeUp>")
-       os.system(" { start-kodi } ")
+$ python wakeupkd.py -c "systemctl start kodi" -m "B8:B2:B2:B2:42:42"
+$ python wakeupkd.py -c "exec kodi" -m "B8:B2:B2:B2:42:42"
+$ python wakeupkd.py -c "/usr/bin/bash -c <path>/kodi.sh" -m "B8:B2:B2:B2:42:42"
 ```
