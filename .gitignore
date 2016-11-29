@@ -1,0 +1,13 @@
+/*
+
+doc/*
+!doc/kore-btn.jpg
+!doc/kore-cfg.jpg
+
+wakeupkd/*
+!wakeupkd/wakeupkd.py
+
+!.gitignore
+!LICENSE
+!README.md
+
