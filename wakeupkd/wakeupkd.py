@@ -121,11 +121,16 @@ def main():
 
     __handle_sigs_for(sock)
 
+    wol_found = False
     while True:
         packet = sock.recv(WOL_PACKET_MAX_BYTES)
-        if __wol_pktcheck(packet):
+
+        if __wol_pktcheck(packet) and not wol_found:
             print("Kore: <WakeUp>")
             os.system("systemctl start kodi")
+            wol_found = True
+        else:
+            wol_found = False
 
 if __name__ == "__main__":
     main()
