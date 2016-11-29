@@ -50,6 +50,15 @@ def __get_size(obj, seen=None):
         size += sum((get_size(i, seen) for i in obj))
     return size
 
+def __ip_ipsrccheck(ipsrc, data):
+    ipsrc_s = ipsrc.split('.')
+    ipsrc_b = [int(i) for i in ipsrc_s]
+    for i in range(4):
+        print (data[i], ';', ipsrc_b[i])
+        if data[i] != ipsrc_b[i]:
+            return False
+    return True
+
 def __wol_datacheck(macaddr, data):
     mac_bytes = bytearray.fromhex(macaddr.replace(':', ''))
     for i in range(6):
@@ -71,9 +80,8 @@ def __wol_pktcheck(packet, macaddr = None, ipsrc = None):
     iph_version = iph[0] >> 4
     iph_len     = (iph[0] & 0xF) * 4
     iph_ipsrc   = iph[8]
-    iph_ipdst   = iph[9]
 
-    if ipsrc != None and ipsrc != iph_src:
+    if ipsrc != None and not __ip_ipsrccheck(ipsrc, iph_ipsrc):
         return False
 
     udph        = struct.unpack('!4H' , packet[iph_len: iph_len + 8])
