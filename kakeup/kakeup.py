@@ -82,20 +82,19 @@ def __handle_sigs_for(socket):
 
 def __getopt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', dest='cmd', help="Shell CMD to execute")
+    parser.add_argument('-c', dest='cmd', help="Shell CMD to execute [required]",
+            required=True)
     parser.add_argument('-m', dest='macaddr',
-            help="Identifies wol packets with a specific destination MACADDR")
+            help="Identifies wol packets with a destination MACADDR [required]",
+            required=True)
     parser.add_argument('-i', dest='ipsrc',
-            help="Specifies an IPSRC address [optional]")
+            help="Specifies an IPSRC address")
     parser.add_argument('-p', dest='port',
-            help="Specifies a port NUM, (default=9) [optional]")
+            help="Specifies a port NUM, (default=9)")
     return parser.parse_args()
 
 def main():
     args = __getopt()
-
-    if args == None or args.cmd == None or args.macaddr == None:
-        sys.exit()
 
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
