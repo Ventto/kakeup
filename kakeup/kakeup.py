@@ -30,28 +30,8 @@ import struct
 import sys
 
 WOLH_PASSWD_NONE     = 102
-WOL_PACKET_MIN_BYTES = 130
-WOL_PACKET_MAX_BYTES = 176
 DEFAULT_PORT         = 9
-DEFAULT_HOST         = "0.0.0.0"
-
-# Get the size of a given object
-def __get_size(obj, seen=None):
-    size = sys.getsizeof(obj)
-    if seen is None:
-        seen = set()
-    obj_id = id(obj)
-    if obj_id in seen:
-        return 0
-    seen.add(obj_id)
-    if isinstance(obj, dict):
-        size += sum((get_size(v, seen) for v in obj.values()))
-        size += sum((get_size(k, seen) for k in obj.keys()))
-    elif hasattr(obj, '__dict__'):
-        size += get_size(obj.__dict__, seen)
-    elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
-        size += sum((get_size(i, seen) for i in obj))
-    return size
+HOST                 = socket.gethostbyname(socket.gethostname())
 
 # Check on MAC address validity in WOL packet data
 def __wol_datacheck(macaddr, data):
@@ -67,11 +47,7 @@ def __wol_datacheck(macaddr, data):
     return True
 
 # Check on WOL packet validity
-def __wol_pktcheck(packet, macaddr, ipsrc = None):
-    size = __get_size(packet)
-    if size < WOL_PACKET_MIN_BYTES:
-        return False
-
+def __wol_pktcheck(packet, macaddr, ipsrc=None, port=None):
     iph         = struct.unpack('!BBHHHBBHL4s' , packet[0:20])
     iph_version = iph[0] >> 4
     iph_len     = (iph[0] & 0xF) * 4
@@ -118,7 +94,7 @@ def main():
 
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
-        sock.bind((DEFAULT_HOST, DEFAULT_PORT))
+        sock.bind((HOST, DEFAULT_PORT))
     except socket.error as msg:
         print ('Cannot create socket. Error: ' + str(msg[0]) + ') Message:' + str(msg[1]))
         sys.exit()
@@ -127,7 +103,7 @@ def main():
 
     wol_found = False
     while True:
-        packet = sock.recv(WOL_PACKET_MAX_BYTES)
+        packet = sock.recv(65565)
 
         if __wol_pktcheck(packet, args.macaddr, args.ipsrc) and not wol_found:
             print("Kore: <WakeUp>")
