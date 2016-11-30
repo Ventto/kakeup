@@ -48,26 +48,19 @@ Usage
 -----
 
 ```
-usage: kakeup.py [-h] [-c CMD] [-m MACADDR] [-i IPSRC]
+usage: kakeup.py [-h] -c CMD -m MACADDR [-i IPSRC] [-p PORT]
 
-Miscellaneous:
-  -h, --help  Show this help message and exit
+optional arguments:
+  -h, --help  show this help message and exit
+  -c CMD      Shell CMD to execute [required]
+  -m MACADDR  Specifies a destination MACADDR [required]
+  -i IPSRC    Specifies an IPSRC address
+  -p PORT     Specifies a port NUM, (default=9)
 
-Necessary:
-  -c CMD      Shell CMD to execute
-  -m MACADDR  Filters wol packets with a specific destination MACADDR
-
-Optional:
-  -i IPSRC    Filters wol packets with a specific IPSRC address
 ```
-
-Examples
--------
 
 * Run it with *sudo*:
 
 ```
 $ python kakeup.py -c "systemctl start kodi" -m "B8:B2:B2:B2:42:42"
-$ python kakeup.py -c "exec kodi" -m "B8:B2:B2:B2:42:42"
-$ python kakeup.py -c "/usr/bin/bash -c <path>/kodi.sh" -m "B8:B2:B2:B2:42:42"
 ```

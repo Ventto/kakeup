@@ -60,6 +60,9 @@ def __wol_pktcheck(packet, macaddr, ipsrc=None, port=None):
     udph_len    = udph[2];
     udph_port   = udph[1];
 
+    if udph_port != port:
+        return False
+
     wolh_off    = iph_len + 8
     wolh_len    = udph_len - 8
 
@@ -83,7 +86,9 @@ def __getopt():
     parser.add_argument('-m', dest='macaddr',
             help="Identifies wol packets with a specific destination MACADDR")
     parser.add_argument('-i', dest='ipsrc',
-            help="Filters wol packets with a specific IPSRC address (optional)")
+            help="Specifies an IPSRC address [optional]")
+    parser.add_argument('-p', dest='port',
+            help="Specifies a port NUM, (default=9) [optional]")
     return parser.parse_args()
 
 def main():
@@ -94,7 +99,7 @@ def main():
 
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
-        sock.bind((HOST, DEFAULT_PORT))
+        sock.bind((HOST, DEFAULT_PORT if args.port == None else int(args.port)))
     except socket.error as msg:
         print ('Cannot create socket. Error: ' + str(msg[0]) + ') Message:' + str(msg[1]))
         sys.exit()
@@ -105,7 +110,8 @@ def main():
     while True:
         packet = sock.recv(65565)
 
-        if __wol_pktcheck(packet, args.macaddr, args.ipsrc) and not wol_found:
+        if ( __wol_pktcheck(packet, args.macaddr, args.ipsrc, int(args.port))
+        and not wol_found ):
             print("Kore: <WakeUp>")
             os.system(args.cmd)
             wol_found = True
