@@ -31,7 +31,7 @@ import sys
 
 WOLH_PASSWD_NONE     = 102
 DEFAULT_PORT         = 9
-HOST                 = socket.gethostbyname(socket.gethostname())
+HOST                 = socket.gethostbyname(socket.getfqdn())
 
 # Check on MAC address validity in WOL packet data
 def __wol_datacheck(macaddr, data):
