@@ -95,10 +95,11 @@ def __getopt():
 
 def main():
     args = __getopt()
+    args.port = DEFAULT_PORT if args.port == None else int(args.port)
 
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_UDP)
-        sock.bind((HOST, DEFAULT_PORT if args.port == None else int(args.port)))
+        sock.bind((HOST, args.port))
     except socket.error as msg:
         print ('Cannot create socket. Error: ' + str(msg[0]) + ') Message:' + str(msg[1]))
         sys.exit()
@@ -109,8 +110,8 @@ def main():
     while True:
         packet = sock.recv(65565)
 
-        if ( __wol_pktcheck(packet, args.macaddr, args.ipsrc, int(args.port))
-        and not wol_found ):
+        if (__wol_pktcheck(packet, args.macaddr, args.ipsrc, args.port)
+                and not wol_found):
             print("Kore: <WakeUp>")
             os.system(args.cmd)
             wol_found = True
